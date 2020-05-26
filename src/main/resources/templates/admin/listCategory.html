@@ -7,7 +7,8 @@
 <script>
     $(function(){
         var data4Vue = {
-            uri:'categories',
+            uri:'categories',  //接收来自controller过来的数据
+            pagination:{},
             beans: []
         };
 
@@ -16,14 +17,22 @@
             el: '#workingArea',
             data: data4Vue,
             mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
-                this.list();
+                this.list(0);
             },
             methods: {
-                list:function(){
-                    var url =  this.uri;
+                list:function(start){
+                    var url =  this.uri+ "?start="+start;
                     axios.get(url).then(function(response) {
-                        vue.beans = response.data;
+                        vue.pagination = response.data;
+                        vue.beans = response.data.content	;
                     });
+                },
+                //增加的jump跳转方法
+                jump: function(page){//跳转最后或者第一页
+                    jump(page,vue); //这个方法在这里只是调用，真正的定义在adminHeader.html 中
+                },
+                jumpByNumber: function(start){//跳转前一页，后一页，前两页，后两页
+                    jumpByNumber(start,vue);
                 }
             }
         });
@@ -67,13 +76,15 @@
                     <a :href="'admin_category_edit?id=' + bean.id "><span class="glyphicon glyphicon-edit"></span></a>
                 </td>
                 <td>
-                    <a href="#nowhere"  @click="deleteBean(bean.id)"><span class="   glyphicon glyphicon-trash"></span></a>
+                    <a href="#nowhere"  @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+    <div th:replace="include/admin/adminPage::html" ></div>
 </div>
 <div th:replace="include/admin/adminFooter::html" ></div>
 </body>
 </html>
+
