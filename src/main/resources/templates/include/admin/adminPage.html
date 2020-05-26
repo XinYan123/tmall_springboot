@@ -11,9 +11,10 @@
 	      <a  href="#nowhere" @click="jump('pre')">‹</a>
 	    </li>
 
-		<!--遍历的 Page4Navigator 中新增加的 navigatepageNums 数组。
+		<!--遍历的 Page4Navigator 被调用的时候，里面有个方法调用了 navigatepageNums 数组
 			遍历出来之后，点击超链会调用 jumpByNumber 函数，
 			并间接地调用adminHeader.html 里的jumpByNumber 函数：-->
+
 		<li  v-for="i in pagination.navigatepageNums">
 			<a href="#nowhere" @click="jumpByNumber(i-1)" >
 				{{i}}

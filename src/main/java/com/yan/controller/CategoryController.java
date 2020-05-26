@@ -35,6 +35,9 @@ public class CategoryController {
         //5表示导航分页最多有5个，像 [1,2,3,4,5] 这样
         Page4Navigator<Category> page =categoryService.list(start, size, 5);
 
+        //上面封装的对象最后直接扔给前端，
+        // page =categoryService.list(start, size, 5);
+        // 给前端的page封装好了start，size这些数据
         return page;
     }
 }

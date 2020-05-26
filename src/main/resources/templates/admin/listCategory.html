@@ -5,9 +5,11 @@
 <body>
 <div th:replace="include/admin/adminNavigator::html" ></div>
 <script>
+
     $(function(){
+
         var data4Vue = {
-            uri:'categories',  //接收来自controller过来的数据
+            uri:'categories',  //接收来自CategoryController过来的数据
             pagination:{},
             beans: []
         };
@@ -19,11 +21,23 @@
             mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
                 this.list(0);
             },
+
             methods: {
+
+
+                //list方法带上了参数start，
+                //通过 categories 获取数据的时候，带上了这个参数
                 list:function(start){
-                    var url =  this.uri+ "?start="+start;
+
+                    var url =  this.uri+ "?start="+start;//通过拼接?start来获取start的数据
+
+                    //获取到的参数，以前是 json 化后的 category数组，
+                    //axios异步拿到url的响应回来的Page4Navigator对象数组，并且将其拿出来response.data.content
                     axios.get(url).then(function(response) {
+
+                        //response.data将Page4Navigator对象数组数据装进data4Vue的pagination:{}里面
                         vue.pagination = response.data;
+
                         vue.beans = response.data.content	;
                     });
                 },
@@ -31,6 +45,7 @@
                 jump: function(page){//跳转最后或者第一页
                     jump(page,vue); //这个方法在这里只是调用，真正的定义在adminHeader.html 中
                 },
+
                 jumpByNumber: function(start){//跳转前一页，后一页，前两页，后两页
                     jumpByNumber(start,vue);
                 }
@@ -58,6 +73,7 @@
             </tr>
             </thead>
             <tbody>
+
             <tr v-for="bean in beans ">
                 <td>{{bean.id}}</td>
                 <td>
