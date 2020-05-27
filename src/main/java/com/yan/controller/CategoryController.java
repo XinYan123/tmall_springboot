@@ -25,7 +25,9 @@ import java.io.IOException;
 @RestController //表示这是一个控制器，并且对每个方法的返回值都会直接转换为 json 数据格式。
 public class CategoryController {
 
-    @Autowired//自动装配 CategoryService
+    //自动装配 CategoryService
+    //spring负责对CategoryService对象进行生产，注入参数，运行构造器，省去我们创建对象的过程
+    @Autowired
     CategoryService categoryService;
 
 //    @GetMapping("/categories")
@@ -48,7 +50,7 @@ public class CategoryController {
         return page;
     }
 
-    //向服务器请求保存数据用postmapping
+    //因为使用的是restful风格的@RestController，服务器跳转时只看注解postmapping，使用的post即可
     @PostMapping("/categories")
     public Object add(Category bean, MultipartFile image, HttpServletRequest request) throws Exception {
         categoryService.add(bean);
