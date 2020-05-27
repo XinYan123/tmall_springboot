@@ -57,4 +57,9 @@ public class CategoryService {
         categoryDAO.delete(id);
     }
 
+    //查询其中一个分类信息，实质上是提取出数据，为修改数据做准备，how2j的作者把修改数据拆开了两步
+    public Category get(int id) {
+        Category c= categoryDAO.findOne(id);
+        return c;
+    }
 }

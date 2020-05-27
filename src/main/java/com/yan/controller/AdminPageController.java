@@ -16,4 +16,11 @@ public class AdminPageController {
     public String listCategory(){
         return "admin/listCategory";
     }
+
+    //点击编辑的超链接跳转页面到编辑页面
+    @GetMapping(value="/admin_category_edit")
+    public String editCategory(){
+        return "admin/editCategory";
+
+    }
 }
