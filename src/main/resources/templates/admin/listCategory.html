@@ -25,6 +25,30 @@
             },
 
             methods: {
+                //删除分类 在下面页面代码中 调用删除功能 @click="deleteBean(bean.id)"
+                deleteBean: function (id) {
+                    //确认是否删除，
+                    //checkDeleteLink()在 adminHeader.html 中定义
+                    //传过来是确认删除的true，！true就是不执行return，开始下面的删除
+                    if(!checkDeleteLink())
+                        return;
+
+                    //组织url, 删除的规范是 /categoreis/123. 要这样写
+                    var url = this.uri+"/"+id;
+
+                    //axios 提交 delete 请求
+                    axios.delete(url).then(function(response){
+
+                        //根据 REST 规范，当删除数据后，应该返回一个空字符串，
+                        // 所以会判断 0!=response.data.length
+                        if(0!=response.data.length){
+                            alert(response.data);
+                        }
+                        else{
+                            vue.list(0);
+                        }
+                    });
+                },
 
                 //获取准备上传的文件
                 getFile: function (event) {

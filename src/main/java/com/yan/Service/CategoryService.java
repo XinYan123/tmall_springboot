@@ -52,7 +52,9 @@ public class CategoryService {
         categoryDAO.save(bean);
     }
 
-
-
+    //删除分类
+    public void delete(int id) {
+        categoryDAO.delete(id);
+    }
 
 }

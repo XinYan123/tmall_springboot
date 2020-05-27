@@ -5,10 +5,7 @@ import com.yan.pojo.Category;
 import com.yan.util.ImageUtil;
 import com.yan.util.Page4Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -70,6 +67,21 @@ public class CategoryController {
 
         BufferedImage img = ImageUtil.change2jpg(file);
         ImageIO.write(img, "jpg", file);
+    }
+
+
+    @DeleteMapping("/categories/{id}")
+    public String delete(@PathVariable("id") int id,
+                         HttpServletRequest request)  throws Exception {
+
+        //根据id删除分类
+        categoryService.delete(id);
+        //删除后台的图片
+        File  imageFolder= new File(request.getServletContext().getRealPath("img/category"));
+        File file = new File(imageFolder,id+".jpg");
+        file.delete();
+
+        return null;
     }
 
 }
