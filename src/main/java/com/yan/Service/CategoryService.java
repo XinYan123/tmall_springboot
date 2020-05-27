@@ -46,4 +46,13 @@ public class CategoryService {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         return categoryDAO.findAll(sort);
     }
+
+    //添加分类
+    public void add(Category bean) {
+        categoryDAO.save(bean);
+    }
+
+
+
+
 }

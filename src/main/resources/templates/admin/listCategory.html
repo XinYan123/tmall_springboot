@@ -11,7 +11,9 @@
         var data4Vue = {
             uri:'categories',  //接收来自CategoryController过来的数据
             pagination:{},
-            beans: []
+            beans: [],
+            bean: { id: 0, name: ''},//bean 用来存放分类信息
+            file: null //file 用来表示上传的文件
         };
 
         //ViewModel
@@ -24,6 +26,37 @@
 
             methods: {
 
+                //获取准备上传的文件
+                getFile: function (event) {
+                    this.file = event.target.files[0];
+                },
+
+                //上传文件
+                add: function () {
+
+                    //上传之前先验证
+                    if(!checkEmpty(this.bean.name, "分类名称"))
+                        return;
+                    if(!checkEmpty(this.file, "分类图片"))
+                        return;
+
+                    //首先拿到上传的跳转的uri，给controller的地址
+                    var url = this.uri;
+
+                    //文件上传添加步骤：axios.js 上传文件要用 formData 这种方式
+                    var formData = new FormData();
+                    formData.append("image", this.file);
+                    formData.append("name", this.bean.name);
+
+                    //正式上传，发送post请求到后端服务器
+                    axios.post(url,formData).then(function(response){
+                        vue.list(0);//上传成功后， 调用 vue.list(0) 重新查询第一页的数据。
+                        vue.bean = { id: 0, name: '', hp: '0'};
+
+                        $("#categoryPic").val('');
+                        vue.file = null;//上传之后把刚刚上传功能存的图片清空
+                    });
+                },
 
                 //list方法带上了参数start，
                 //通过 categories 获取数据的时候，带上了这个参数
@@ -54,12 +87,14 @@
     });
 
 </script>
-
+<!--总页面-->
 <div id="workingArea" >
     <h1 class="label label-info" >分类管理</h1>
     <br>
     <br>
     <div class="listDataTableDiv">
+
+<!--  展示信息的部分     -->
         <table class="table table-striped table-bordered table-hover  table-condensed">
             <thead>
             <tr class="success">
@@ -98,8 +133,43 @@
             </tbody>
         </table>
     </div>
+
+<!-- 这个是分页栏-->
     <div th:replace="include/admin/adminPage::html" ></div>
+
+<!--    上传图片的部分-->
+    <div class="panel panel-warning addDiv">
+        <div class="panel-heading">新增分类</div>
+        <div class="panel-body">
+            <table class="addTable">
+                <tr>
+                    <td>分类名称</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.name" type="text" class="form-control"></td>
+                </tr>
+
+                <!--上传图片-->
+                <tr>
+                    <td>分类图片</td>
+                    <td>
+                        <input id="categoryPic" accept="image/*" type="file" name="image" @change="getFile($event)" />
+                    </td>
+                </tr>
+
+
+                <tr class="submitTR">
+
+                    <td colspan="2" align="center">
+                        <a href="#nowhere"  @click="add" class="btn btn-success">提交</a>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
 </div>
+
 <div th:replace="include/admin/adminFooter::html" ></div>
 </body>
 </html>
